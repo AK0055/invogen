@@ -5,17 +5,27 @@ import { useEffect,useState } from 'react';
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { initializeApp } from "firebase/app";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, signInWithPopup, GoogleAuthProvider,createUserWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
 import firebaseConfig from "../comps/firebaseconfig";
+import useDarkMode from '../comps/useDarkMode';
+import Navbar from '../comps/Navbar';
 export default function Home() {
-  {var [username,setUsername]=useState('logged out');     var [email,setEmail]=useState('');  var [pwd,setPwd]=useState('');  
-  const router = useRouter()   }
+  {var [autho,setAutho]=useState('logged out');     var [email,setEmail]=useState('');  var [pwd,setPwd]=useState('');  
+  //const [user, loading, error] = useAuthState(auth);
+  
+  const router = useRouter();
+  useEffect(() => {
+  if (email){
+    router.push('/');
+  }
+  },[email])  }
   const googlehandler=()=>{
     googlesign();
-    console.log(username)
+    console.log(autho)
     console.log(router.pathname)
-    if(username=='logged in' || router.pathname=='/' ){
-      router.push('/dashboard');
+    if(autho=='logged in' && router.pathname=='/' ){
+      router.push('/mainpage');
     }
   }
   function googlesign() {
@@ -29,22 +39,28 @@ export default function Home() {
       const userin = result.user;
       console.log(userin);
       //setautho('logged in')
-      console.log(username);
-      setUsername('logged in')
+      console.log(autho);
+      setAutho('logged in')
     }).catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       //const email = error.customData.email;
       const credential = GoogleAuthProvider.credentialFromError(error);
-      setUsername('logged out')
+      setAutho('logged out')
     });
  }
  const signuphandler=()=>{
-  signup();
-  console.log(username)
+   try{
+    signup();
+  }
+  catch(error){
+    console.log(error)
+  }
+  
+  console.log(autho)
   console.log(router.pathname)
-  if(username=='logged in' || router.pathname=='/' ){
-    router.push('/dashboard');
+  if(autho=='logged in' || router.pathname=='/' ){
+    //router.push('/mainpage');
   }
  }
  function signup(){
@@ -54,22 +70,23 @@ export default function Home() {
   createUserWithEmailAndPassword(auth, email, pwd)
   .then((userCredential) => {
     const user = userCredential.user;
-    setUsername('logged in')
+    setAutho('logged in')
     console.log(user)
   })
   .catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
-    setUsername('logged out')
+    console.log(errorMessage)
+    setAutho('logged out')
   });
 
  }
- const anonysignhandler=()=>{
-  anonysign();
-  console.log(username)
-  console.log(router.pathname)
-  if(username=='logged in' && router.pathname=='/' ){
-    router.push('/dashboard');
+ const  anonysignhandler= async ()=>{
+  await anonysign();
+  /* console.log(autho)
+  console.log(router.pathname) */
+  if(autho=='logged in' && router.pathname=='/' ){
+    router.push('/mainpage');
   }
  }
  function anonysign(){
@@ -80,21 +97,21 @@ export default function Home() {
     if (user) {
       const uid = user.uid;
       console.log(uid);
-      setUsername('logged in')
+      setAutho('logged in')
     } else {
-      setUsername('logged out')
+      setAutho('logged out')
     }
   });
  }
   return (
     
     <div className={styles.container}>
+      
       <Head>
         <title>Invogen</title>
         <meta name="description" content="NextJS app" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <main className={styles.main}>
         <h1 className={styles.title}>
           Welcome to <a>Invogen</a>
@@ -114,7 +131,7 @@ export default function Home() {
         </div>
         <div>
             <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Your password</label>
-            <input type="password"   onChange={(e) => setPwd(e.target.value)} name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
+            <input type="password" onChange={(e) => setPwd(e.target.value)} name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
         </div><br/>
 
         <div class="flex items-start">
@@ -129,7 +146,7 @@ export default function Home() {
                 </div>
             </div>
         </div>
-        <button type="submit" onClick={signuphandler} class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login to your account</button>
+        <button type="submit" onClick={signuphandler} class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Sign Up</button>
         <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
         Already have an account? 
         <Link href="/login">

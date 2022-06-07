@@ -8,7 +8,6 @@ const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
 export default function googlesign() {
-  var flag=0
 
    signInWithPopup(auth, provider)
    .then((result) => {
@@ -18,7 +17,7 @@ export default function googlesign() {
      const userin = result.user;
      console.log(userin);
      //setautho('logged in')
-     console.log(username);
+     console.log(autho);
      
    }).catch((error) => {
      const errorCode = error.code;

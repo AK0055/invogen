@@ -5,17 +5,17 @@ import { useEffect,useState } from 'react';
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider,createUserWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
+import { getAuth, signInWithPopup, GoogleAuthProvider,signInWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
 import firebaseConfig from "../comps/firebaseconfig";
 
 export default function Home() {
-  {var [username,setUsername]=useState('logged out');     var [email,setEmail]=useState('');  var [pwd,setPwd]=useState('');  
+  {var [autho,setAutho]=useState('logged out');     var [email,setEmail]=useState('');  var [pwd,setPwd]=useState('');  
   const router = useRouter()   }
   const googlehandler=()=>{
     googlesign();
-    console.log(username)
+    console.log(autho)
     console.log(router.pathname)
-    if(username=='logged in' || router.pathname=='/login' ){
+    if(autho=='logged in' || router.pathname=='/login' ){
       router.push('/dashboard');
     }
   }
@@ -30,21 +30,21 @@ export default function Home() {
       const userin = result.user;
       console.log(userin);
       //setautho('logged in')
-      console.log(username);
-      setUsername('logged in')
+      console.log(autho);
+      setAutho('logged in')
     }).catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
       //const email = error.customData.email;
       const credential = GoogleAuthProvider.credentialFromError(error);
-      setUsername('logged out')
+      setAutho('logged out')
     });
  }
     const signinhandler=()=>{
       signin();
-      console.log(username)
+      console.log(autho)
       console.log(router.pathname)
-      if(username=='logged in' || router.pathname=='/login' ){
+      if(autho=='logged in' && router.pathname=='/login' ){
         router.push('/dashboard');
       }
      }
@@ -52,24 +52,25 @@ export default function Home() {
       const app = initializeApp(firebaseConfig);
       const auth = getAuth();
       
-      createUserWithEmailAndPassword(auth, email, pwd)
+      signInWithEmailAndPassword(auth, email, pwd)
       .then((userCredential) => {
         const user = userCredential.user;
-        setUsername('logged in')
+        setAutho('logged in')
         console.log(user)
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        setUsername('logged out')
+        console.log(errorMessage)
+        setAutho('logged out')
       });
     
      }
      const anonysignhandler=()=>{
       anonysign();
-      console.log(username)
+      console.log(autho)
       console.log(router.pathname)
-      if(username=='logged in' && router.pathname=='/login' ){
+      if(autho=='logged in' && router.pathname=='/login' ){
         router.push('/dashboard');
       }
      }
@@ -81,9 +82,9 @@ export default function Home() {
         if (user) {
           const uid = user.uid;
           console.log(uid);
-          setUsername('logged in')
+          setAutho('logged in')
         } else {
-          setUsername('logged out')
+          setAutho('logged out')
         }
       });
      }
