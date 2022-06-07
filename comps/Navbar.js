@@ -1,15 +1,28 @@
 import useDarkMode from "../comps/useDarkMode";
 import Link from 'next/link'
+import { initializeApp } from "firebase/app";
+import firebaseConfig from "../comps/firebaseconfig";
+import { useRouter } from 'next/router'
 
-export default function Navbar() {
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth, signOut,onAuthStateChanged } from "firebase/auth";
+export default function Navbar({props}) {
     const [colorTheme, setTheme] = useDarkMode();
-    
-    
+    const [user, loading, error] = useAuthState(auth);
+    const router = useRouter();
+    const logout = () => {
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        signOut(auth);
+        router.push('/');
+      };
      
     return(
         
         <nav class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800">
             {colorTheme === "light" ? (
+        <button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
+        {console.log('props is'+props)}
         <svg
           onClick={() => setTheme("light")}
           xmlns="http://www.w3.org/2000/svg"
@@ -24,7 +37,7 @@ export default function Navbar() {
             strokeWidth={2}
             d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
           />
-        </svg>
+        </svg></button>
       ) : (
         <svg
           onClick={() => setTheme("dark")}
@@ -52,7 +65,7 @@ export default function Navbar() {
             </Link>
             <div class="flex md:order-2">
                 <Link href="/">
-                <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Logout</button>
+                <button onClick={logout} type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-3 md:mr-0 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Logout</button>
                 </Link>
                 <button data-collapse-toggle="mobile-menu-4" type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="mobile-menu-4" aria-expanded="false">
                 <span class="sr-only">Open main menu</span>
@@ -69,7 +82,7 @@ export default function Navbar() {
                 </li>
                 <li>
                     <Link href='/about'>
-                  <a  class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</a>
+                  <a  class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">sdsdd</a>
                       </Link>
                 </li>
                 

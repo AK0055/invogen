@@ -6,103 +6,101 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { initializeApp } from "firebase/app";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { getAuth, signInWithPopup, GoogleAuthProvider,createUserWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
+import { getAuth, signInAnonymously, signInWithPopup, GoogleAuthProvider,createUserWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
 import firebaseConfig from "../comps/firebaseconfig";
-import useDarkMode from '../comps/useDarkMode';
-import Navbar from '../comps/Navbar';
+import {
+  getFirestore,
+  query,
+  getDocs,
+  collection,
+  where,
+  addDoc,
+} from "firebase/firestore";
+import {
+  auth,
+  db
+} from "../comps/firebaser";
+
 export default function Home() {
   {var [autho,setAutho]=useState('logged out');     var [email,setEmail]=useState('');  var [pwd,setPwd]=useState('');  
-  //const [user, loading, error] = useAuthState(auth);
   
   const router = useRouter();
+  const [user, loading, error] = useAuthState(auth);
+
   useEffect(() => {
-  if (email){
-    router.push('/');
-  }
-  },[email])  }
-  const googlehandler=()=>{
-    googlesign();
-    console.log(autho)
-    console.log(router.pathname)
-    if(autho=='logged in' && router.pathname=='/' ){
-      router.push('/mainpage');
+    if (loading) return;
+    
+  }, [user, loading]);  }
+  const signInWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const res = await signInWithPopup(auth, provider);
+      const user = res.user;
+      const q = query(collection(db, "users"), where("uid", "==", user.uid));
+      const docs = await getDocs(q);
+      if (docs.docs.length === 0) {
+        await addDoc(collection(db, "users"), {
+          uid: user.uid,
+          name: user.displayName,
+          authProvider: "google",
+          email: user.email,
+        });
+        router.push('/mainpage');
+      }
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
     }
+  };
+  
+ const register = async () => {
+  try {
+    const res = await createUserWithEmailAndPassword(auth, email, pwd);
+    const user = res.user;
+    
+
+    await addDoc(collection(db, "users"), {
+      uid: user.uid,
+      authProvider: "local",
+      email,
+    });
+    router.push('/mainpage');
+  } catch (err) {
+    console.error(err);
+    alert(err.message);
   }
-  function googlesign() {
-    const app = initializeApp(firebaseConfig);const auth = getAuth();
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-    .then((result) => {
+};
  
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      const userin = result.user;
-      console.log(userin);
-      //setautho('logged in')
-      console.log(autho);
-      setAutho('logged in')
-    }).catch((error) => {
+ const  anonysignhandler=  ()=>{
+   try{
+    signInAnonymously(auth)
+    .then(() => {
+      // Signed in..
+    })
+    .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      //const email = error.customData.email;
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      setAutho('logged out')
+      // ...
     });
- }
- const signuphandler=()=>{
-   try{
-    signup();
-  }
-  catch(error){
-    console.log(error)
-  }
-  
-  console.log(autho)
-  console.log(router.pathname)
-  if(autho=='logged in' || router.pathname=='/' ){
-    //router.push('/mainpage');
-  }
- }
- function signup(){
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth();
-  
-  createUserWithEmailAndPassword(auth, email, pwd)
-  .then((userCredential) => {
-    const user = userCredential.user;
-    setAutho('logged in')
-    console.log(user)
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    console.log(errorMessage)
-    setAutho('logged out')
-  });
-
- }
- const  anonysignhandler= async ()=>{
-  await anonysign();
-  /* console.log(autho)
-  console.log(router.pathname) */
-  if(autho=='logged in' && router.pathname=='/' ){
-    router.push('/mainpage');
-  }
- }
- function anonysign(){
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth();
-  onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, (user) => {
     
-    if (user) {
-      const uid = user.uid;
-      console.log(uid);
-      setAutho('logged in')
-    } else {
-      setAutho('logged out')
-    }
-  });
+      if (user) {
+        const uid = user.uid;
+        console.log(uid);
+        setAutho('logged in')
+        
+        router.push('/mainpage');
+      } else {
+        setAutho('logged out')
+      }
+    });
+   }
+   catch(err){console.error(err);
+    alert(err.message);}
+  
+  
  }
+ 
   return (
     
     <div className={styles.container}>
@@ -123,7 +121,7 @@ export default function Home() {
 
         <div className={styles.grid}>
         <div class="p-4 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md sm:p-6 lg:p-8 dark:bg-gray-800 dark:border-gray-700">
-        <form class="space-y-6" action="#">
+        <div class="space-y-6">
         <h5 class="text-xl font-medium text-gray-900 dark:text-white text-center">Create an account</h5>
         <div>
             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Your email</label>
@@ -137,7 +135,7 @@ export default function Home() {
         <div class="flex items-start">
             <div class="flex items-start">
                 <div class="flex items-center h-5">
-                  <button className="login-provider-button 	translate-x-5	" onClick={googlehandler}>
+                  <button className="login-provider-button 	translate-x-5	" onClick={signInWithGoogle}>
                     <img src="https://img.icons8.com/ios-filled/50/000000/google-logo.png" alt="google icon"/>
                   </button>
                   <button className="login-provider-button 	translate-x-10	" onClick={anonysignhandler}>
@@ -146,7 +144,7 @@ export default function Home() {
                 </div>
             </div>
         </div>
-        <button type="submit" onClick={signuphandler} class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Sign Up</button>
+        <button onClick={register} class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Sign Up</button>
         <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
         Already have an account? 
         <Link href="/login">
@@ -154,7 +152,7 @@ export default function Home() {
         </Link>
         </div>
         
-    </form>
+    </div>
 </div>
         </div>
       </main>

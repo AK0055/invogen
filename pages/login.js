@@ -5,89 +5,96 @@ import { useEffect,useState } from 'react';
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider,signInWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
-import firebaseConfig from "../comps/firebaseconfig";
+import { useAuthState } from "react-firebase-hooks/auth";
 
+import { getAuth, signInAnonymously,signInWithPopup, GoogleAuthProvider,signInWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
+import firebaseConfig from "../comps/firebaseconfig";
+import {
+  getFirestore,
+  query,
+  getDocs,
+  collection,
+  where,
+  addDoc,
+} from "firebase/firestore";
+import {
+  auth,
+  db
+} from "../comps/firebaser";
 export default function Home() {
   {var [autho,setAutho]=useState('logged out');     var [email,setEmail]=useState('');  var [pwd,setPwd]=useState('');  
-  const router = useRouter()   }
-  const googlehandler=()=>{
-    googlesign();
-    console.log(autho)
-    console.log(router.pathname)
-    if(autho=='logged in' || router.pathname=='/login' ){
-      router.push('/dashboard');
-    }
-  }
-  function googlesign() {
-    const app = initializeApp(firebaseConfig);const auth = getAuth();
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-    .then((result) => {
- 
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      const userin = result.user;
-      console.log(userin);
-      //setautho('logged in')
-      console.log(autho);
-      setAutho('logged in')
-    }).catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      //const email = error.customData.email;
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      setAutho('logged out')
-    });
- }
-    const signinhandler=()=>{
-      signin();
-      console.log(autho)
-      console.log(router.pathname)
-      if(autho=='logged in' && router.pathname=='/login' ){
-        router.push('/dashboard');
-      }
-     }
-     function signin(){
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth();
-      
-      signInWithEmailAndPassword(auth, email, pwd)
-      .then((userCredential) => {
-        const user = userCredential.user;
-        setAutho('logged in')
-        console.log(user)
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorMessage)
-        setAutho('logged out')
-      });
+  const router = useRouter()   
+  const [user, loading, error] = useAuthState(auth);
+
+  useEffect(() => {
+    if (loading) return;
     
-     }
-     const anonysignhandler=()=>{
-      anonysign();
-      console.log(autho)
-      console.log(router.pathname)
-      if(autho=='logged in' && router.pathname=='/login' ){
-        router.push('/dashboard');
+  }, [user, loading]);
+  }
+  const signInWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const res = await signInWithPopup(auth, provider);
+      const user = res.user;
+      const q = query(collection(db, "users"), where("uid", "==", user.uid));
+      const docs = await getDocs(q);
+      if (docs.docs.length === 0) {
+        await addDoc(collection(db, "users"), {
+          uid: user.uid,
+          name: user.displayName,
+          authProvider: "google",
+          email: user.email,
+        });
+        router.push('/mainpage');
       }
-     }
-     function anonysign(){
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth();
-      onAuthStateChanged(auth, (user) => {
-        
-        if (user) {
-          const uid = user.uid;
-          console.log(uid);
-          setAutho('logged in')
-        } else {
-          setAutho('logged out')
-        }
-      });
-     }
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
+  const login = async () => {
+    try {
+      const res = await signInWithEmailAndPassword(auth, email, pwd);
+      const user = res.user;
+      
+  
+      
+      router.push('/mainpage');
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    }
+  };
+    
+  const  anonysignhandler=  ()=>{
+    try{
+     signInAnonymously(auth)
+     .then(() => {
+       // Signed in..
+     })
+     .catch((error) => {
+       const errorCode = error.code;
+       const errorMessage = error.message;
+       // ...
+     });
+     onAuthStateChanged(auth, (user) => {
+     
+       if (user) {
+         const uid = user.uid;
+         console.log(uid);
+         setAutho('logged in')
+         
+         router.push('/mainpage');
+       } else {
+         setAutho('logged out')
+       }
+     });
+    }
+    catch(err){console.error(err);
+     alert(err.message);}
+   
+   
+  }
   return (
       
     <div className={styles.container}>
@@ -108,7 +115,7 @@ export default function Home() {
 
         <div className={styles.grid}>
         <div class="p-4 max-w-sm bg-white rounded-lg border border-gray-200 shadow-md sm:p-6 lg:p-8 dark:bg-gray-800 dark:border-gray-700">
-        <form class="space-y-6" action="#">
+        <div class="space-y-6">
         <h5 class="text-xl font-medium text-gray-900 dark:text-white text-center">Log In</h5>
         <div>
             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Your email</label>
@@ -122,7 +129,7 @@ export default function Home() {
         <div class="flex items-start">
             <div class="flex items-start">
                 <div class="flex items-center h-5">
-                  <button className="login-provider-button 	translate-x-5	" onClick={googlehandler}>
+                  <button className="login-provider-button 	translate-x-5	" onClick={signInWithGoogle}>
                     <img src="https://img.icons8.com/ios-filled/50/000000/google-logo.png" alt="google icon"/>
                   </button>
                   <button className="login-provider-button 	translate-x-10	" onClick={anonysignhandler}>
@@ -131,14 +138,14 @@ export default function Home() {
                 </div>
             </div>
         </div>
-        <button type="submit" onClick={signinhandler} class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login to your account</button>
+        <button onClick={login} class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Login to your account</button>
         <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
         New user?   
         <Link href="/">
             <a class="text-blue-700 hover:underline dark:text-blue-500">Sign Up</a>
         </Link>
         </div>
-    </form>
+    </div>
 </div>
         </div>
       </main>
