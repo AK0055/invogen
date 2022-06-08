@@ -5,9 +5,12 @@ const NotFound = () => {
     const router = useRouter();
     useEffect(() =>{
        setTimeout(() =>{
-        router.push('/mainpage')
+        router.back()
        },3000)
     },[])
+    const goback=()=>{
+      router.back()
+    }
     return (  
     
     <div class="h-screen w-screen bg-gray-100 flex items-center">
@@ -20,8 +23,11 @@ const NotFound = () => {
               <p class="mb-8">But dont worry, you can find plenty of other things on our homepage.</p>
               <Link href='/mainpage'>
               <button class="px-4 inline py-2 text-sm font-medium leading-5 shadow text-white transition-colors duration-150 border border-transparent rounded-lg focus:outline-none focus:shadow-outline-blue bg-blue-600 active:bg-blue-600 hover:bg-blue-700">back to homepage</button>
-
               </Link>
+              <button onClick={goback} class="px-4 inline py-2 text-sm font-medium leading-5 shadow text-white transition-colors duration-150 border border-transparent rounded-lg focus:outline-none focus:shadow-outline-blue bg-blue-600 active:bg-blue-600 hover:bg-blue-700">Go to previous page</button>
+              
+              
+
         </div>
           <div class="max-w-lg">
         </div>

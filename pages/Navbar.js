@@ -9,7 +9,7 @@ import {
 } from "../comps/firebaser";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, signOut,onAuthStateChanged } from "firebase/auth";
-export default function Navbar({props}) {
+export default function Navbar() {
     const [colorTheme, setTheme] = useDarkMode();
     const [user, loading, error] = useAuthState(auth);
     const router = useRouter();
@@ -25,7 +25,6 @@ export default function Navbar({props}) {
         <nav class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800">
             {colorTheme === "light" ? (
         <button type="button" class="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700">
-        {console.log('props is'+props)}
         <svg
           onClick={() => setTheme("light")}
           xmlns="http://www.w3.org/2000/svg"
@@ -87,7 +86,7 @@ export default function Navbar({props}) {
                 </li>
                 <li>
                     <Link href='/about'>
-                  <a  class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">{props}</a>
+                  <a  class="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</a>
                       </Link>
                 </li>
                 
