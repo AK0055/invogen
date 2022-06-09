@@ -61,7 +61,7 @@ export default function Navbar() {
         
       )}
             <div class="container flex flex-wrap justify-between items-center mx-auto">
-            <Link href="/dashboard">
+            <Link href="/mainpage">
             <a class="flex items-center">
             <img src="/invologo.jpg" class="mr-3 h-6 sm:h-9" alt="InvoLogo" />
                   <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Invogen</span>

@@ -20,16 +20,10 @@ import {
   auth,
   db
 } from "../comps/firebaser";
-import obj from "./prodobj";
+import {tarprodarr} from './prodarr'
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, signOut, signInWithPopup, GoogleAuthProvider,createUserWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
-export var  targetprod = {
-    prodname: [],
-    qty:[],
-    tax:[],
-    price:[]
-  };
-
+export var tarprodcopy = []
 export default function Main() {
   const router= useRouter()
   const [prodn,setProdn]= useState('')
@@ -54,14 +48,21 @@ export default function Main() {
     }
   }
   const addprod=()=> {
-    obj.prodname.push(prodn)
-    obj.qty.push(pqty)
-    obj.tax.push(ptax)
-    obj.price.push(pprice)
-    console.log(obj)
-    const returnedobj = Object.assign(targetprod,obj);
-
-
+    var targetprod={
+        "quantity": '',
+        "description": '',
+        "tax-rate": '',
+        "price": ''
+    }
+    targetprod.description=prodn
+    targetprod.quantity=pqty
+    targetprod.taxrate=ptax
+    targetprod.price=pprice
+    console.log(targetprod)
+    //const returnedobj = Object.assign(targetprod,obj);
+    tarprodarr.push(targetprod)
+    console.log(tarprodarr)
+    tarprodcopy=tarprodarr
   }
   const prodpager=()=> {
     router.push('/invodetails')

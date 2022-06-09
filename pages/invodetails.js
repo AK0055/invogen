@@ -8,20 +8,8 @@ import {invotest} from './invotest'
 import { useRouter } from 'next/router'
 import invobj from "./invos";
 import {
-  getFirestore,
-  query,
-  getDocs,
-  collection,
-  where,
-  addDoc,
-  doc, getDoc 
-} from "firebase/firestore";
-import {
-  auth,
-  db
+  auth
 } from "../comps/firebaser";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { getAuth, signOut, signInWithPopup, GoogleAuthProvider,createUserWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
 export var targetinv = {
     invonum: '',
     invodate:'',

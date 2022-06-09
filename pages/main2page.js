@@ -7,22 +7,10 @@ import styles from '../styles/Home.module.css'
 import {invotest} from './invotest'
 import { useRouter } from 'next/router'
 import clientobj from "./clients";
-
 import {
-  getFirestore,
-  query,
-  getDocs,
-  collection,
-  where,
-  addDoc,
-  doc, getDoc 
-} from "firebase/firestore";
-import {
-  auth,
-  db
+  auth
 } from "../comps/firebaser";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { getAuth, signOut, signInWithPopup, GoogleAuthProvider,createUserWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
+
 export var targetcli = {
     company: '',
     street:'',
@@ -34,11 +22,11 @@ export var targetcli = {
 export default function Main() {
     const router= useRouter()
     const [company,setcompany]= useState('')
-  const [street,setstreet]= useState('')
-  const [zip,setzip]= useState(0)
-  const [city,setcity]= useState('')
-  const [country,setcountry]= useState('')
-  const [usern,setUsern]=useState('User')
+    const [street,setstreet]= useState('')
+    const [zip,setzip]= useState(0)
+    const [city,setcity]= useState('')
+    const [country,setcountry]= useState('')
+    const [usern,setUsern]=useState('User')
   const getemail=(user)=>{
     try{
       console.log(user)
