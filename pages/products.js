@@ -23,10 +23,15 @@ import {
 import obj from "./prodobj";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, signOut, signInWithPopup, GoogleAuthProvider,createUserWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
-export default function Main() {
-    const router= useRouter()
-    
+export var  targetprod = {
+    prodname: [],
+    qty:[],
+    tax:[],
+    price:[]
+  };
 
+export default function Main() {
+  const router= useRouter()
   const [prodn,setProdn]= useState('')
   const [pqty,setpqtyn]=useState(0)
   const [ptax,setptax]=useState(0)
@@ -54,10 +59,12 @@ export default function Main() {
     obj.tax.push(ptax)
     obj.price.push(pprice)
     console.log(obj)
+    const returnedobj = Object.assign(targetprod,obj);
+
 
   }
   const prodpager=()=> {
-    router.push('/products')
+    router.push('/invodetails')
   }
   
  
@@ -104,10 +111,10 @@ export default function Main() {
             
         </div>
     </div>
-    <div class="p-5">
+        <div class="p-5">
             <button onClick={addprod} type="button" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
 
-            </div>
+        </div>
     </form>
       
       <div class="px-5">

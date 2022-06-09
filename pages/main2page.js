@@ -6,6 +6,7 @@ import { useEffect,useState } from 'react';
 import styles from '../styles/Home.module.css'
 import {invotest} from './invotest'
 import { useRouter } from 'next/router'
+import clientobj from "./clients";
 
 import {
   getFirestore,
@@ -22,9 +23,21 @@ import {
 } from "../comps/firebaser";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, signOut, signInWithPopup, GoogleAuthProvider,createUserWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
+export var targetcli = {
+    company: '',
+    street:'',
+    zip:0,
+    city:'',
+    country:''
+  };
+
 export default function Main() {
     const router= useRouter()
-
+    const [company,setcompany]= useState('')
+  const [street,setstreet]= useState('')
+  const [zip,setzip]= useState(0)
+  const [city,setcity]= useState('')
+  const [country,setcountry]= useState('')
   const [usern,setUsern]=useState('User')
   const getemail=(user)=>{
     try{
@@ -47,7 +60,19 @@ export default function Main() {
         console.log(usern) */
     }
   }
+  const addclient=()=> {
+    clientobj.company=company
+    clientobj.street=street
+    clientobj.zip=zip
+    clientobj.city=city
+    clientobj.country=country
+    console.log(clientobj)
+    const returnedclient = Object.assign(targetcli, clientobj);
+
+
+  }
   const prodpager=()=> {
+    addclient();
     router.push('/products')
   }
   useEffect(() => {
@@ -74,23 +99,23 @@ export default function Main() {
         
         <div>
             <label for="ccompany" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Company</label>
-            <input type="text" id="ccompany" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Akompany" required/>
+            <input onChange={(e) => setcompany(e.target.value)} type="text" id="ccompany" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Akompany" required/>
         </div>  
         <div>
             <label for="caddress" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Street</label>
-            <input type="text" id="caddress" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="177A Bleecker Street" required/>
+            <input onChange={(e) => setstreet(e.target.value)} type="text" id="caddress" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="177A Bleecker Street" required/>
         </div>  
         <div>
             <label for="czip" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Zip</label>
-            <input type="number" id="czip" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="600011"  required/>
+            <input onChange={(e) => setzip(e.target.value)} type="number" id="czip" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="600011"  required/>
         </div>
         <div>
             <label for="ccity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">City</label>
-            <input type="text" id="ccity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Chennai" required/>
+            <input onChange={(e) => setcity(e.target.value)} type="text" id="ccity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Chennai" required/>
         </div>  
         <div>
             <label for="ccountry" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Country</label>
-            <input type="text" id="ccountry" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="India" required/>
+            <input onChange={(e) => setcountry(e.target.value)} type="text" id="ccountry" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="India" required/>
         </div>  
       </div>
       </form>

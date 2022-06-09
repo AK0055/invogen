@@ -1,7 +1,17 @@
 import easyinvoice from "easyinvoice";
-export function invotest(){
-   
-    
+import {targetcli} from "./main2page";
+import {targetsen} from "./mainpage";
+import {targetprod} from "./products";
+import {targetinv} from "./invodetails";
+
+import { useRouter } from 'next/router'
+import Link from 'next/link'
+export default function invotest(){
+    console.log(targetcli)
+   console.log(targetsen)
+   console.log(targetprod)
+   console.log(targetinv)
+    const router=useRouter()
     var data = {
         // Customize enables you to provide your own templates
         // Please review the documentation for instructions and examples
@@ -16,49 +26,49 @@ export function invotest(){
         },
         // Your own data
         "sender": {
-            "company": "Sample Corp",
-            "address": "Sample Street 123",
-            "zip": "1234 AB",
-            "city": "Sampletown",
-            "country": "Samplecountry"
+            "company": targetsen.company,
+            "address": targetsen.street,
+            "zip": targetsen.zip,
+            "city": targetsen.city,
+            "country": targetsen.country
             //"custom1": "custom value 1",
             //"custom2": "custom value 2",
             //"custom3": "custom value 3"
         },
         // Your recipient
         "client": {
-            "company": "Client Corp",
-            "address": "Clientstreet 456",
-            "zip": "4567 CD",
-            "city": "Clientcity",
-            "country": "Clientcountry"
+            "company": targetcli.company,
+            "address": targetcli.street,
+            "zip": targetcli.zip,
+            "city": targetcli.city,
+            "country": targetcli.country
             // "custom1": "custom value 1",
             // "custom2": "custom value 2",
             // "custom3": "custom value 3"
         },
         "information": {
             // Invoice number
-            "number": "2021.0001",
-            // Invoice data
-            "date": "12-12-2021",
+            "number": targetinv.invonum,
+            // Invoice date
+            "date": targetinv.invodate,
             // Invoice due date
-            "due-date": "31-12-2021"
+            "due-date": targetinv.due
         },
         // The products you would like to see on your invoice
         // Total values are being calculated automatically
         "products": [
-            {
-                "quantity": 2,
-                "description": "Product 1",
-                "tax-rate": 6,
-                "price": 33.87
+           /*  {
+                "quantity": targetprod.qty[0],
+                "description": targetprod.prodname[0],
+                "tax-rate": targetprod.taxrate[0],
+                "price": targetprod.price[0]
             },
             {
-                "quantity": 4.1,
-                "description": "Product 2",
-                "tax-rate": 6,
-                "price": 12.34
-            },
+                "quantity": targetprod.qty[1],
+                "description": targetprod.prodname[1],
+                "tax-rate": targetprod.taxrate[1],
+                "price": targetprod.price[1]
+            }, */
             {
                 "quantity": 4.5678,
                 "description": "Product 3",
@@ -70,9 +80,9 @@ export function invotest(){
         "bottom-notice": "Kindly pay your invoice within 15 days.",
         // Settings to customize your invoice
         "settings": {
-            "currency": "USD", // See documentation 'Locales and Currency' for more info. Leave empty for no currency.
+            "currency": targetinv.curr, // See documentation 'Locales and Currency' for more info. Leave empty for no currency.
             // "locale": "nl-NL", // Defaults to en-US, used for number formatting (See documentation 'Locales and Currency')
-            // "tax-notation": "gst", // Defaults to 'vat'
+             "tax-notation": targetinv.tax.toLowerCase, // Defaults to 'vat'
             // "margin-top": 25, // Defaults to '25'
             // "margin-right": 25, // Defaults to '25'
             // "margin-left": 25, // Defaults to '25'
@@ -104,5 +114,13 @@ export function invotest(){
         easyinvoice.download('myInvoice.pdf', result.pdf);
     });
     //const result = await easyinvoice.createInvoice(data);
+    return(
+       <div><h1>Invoice page</h1>
+       <Link href='/mainpage'>
+           <a>goto main</a>
+       </Link>
+       
+       </div>
 
+    );
 }
