@@ -7,6 +7,8 @@ import styles from '../styles/Home.module.css'
 import {invotest} from './invotest'
 import { useRouter } from 'next/router'
 import clientobj from "./clients";
+import { motion } from 'framer-motion';
+
 import {
   auth
 } from "../comps/firebaser";
@@ -76,9 +78,23 @@ export default function Main() {
       </Head>
       <Navbar usern={usern}/>
       <div className='text-gray-900 dark:text-gray-300'>
-      <h5 className={styles.title}>
+      <motion.div initial="hidden" animate="visible" variants={{
+  hidden: {
+    scale: .8,
+    opacity: 0
+  },
+  visible: {
+    scale: 1,
+    opacity: 1,
+    transition: {
+      delay: .4
+    }
+  },
+}}>
+  <h5 className={styles.title}>
           Hi, <a>{usern}</a> 👋
         </h5>
+</motion.div>
         <p className='p-5 text-slate-900 dark:text-white	decoration-8	font-bold'> Enter Client details</p>
       </div>
       

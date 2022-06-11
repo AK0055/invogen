@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
 import {
     onAuthStateChanged,
   GoogleAuthProvider,
@@ -24,6 +25,8 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();
+const storage = getStorage(app);
+
 const signInWithGoogle = async () => {
   try {
     const res = await signInWithPopup(auth, googleProvider);
@@ -86,5 +89,6 @@ export {
   signInWithGoogle,
   logInWithEmailAndPassword,
   sendPasswordReset,
-  anonylogin
+  anonylogin,
+  storage
 };

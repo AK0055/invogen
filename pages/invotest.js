@@ -5,12 +5,15 @@ import {tarprodcopy} from "./products";
 import {targetinv} from "./invodetails";
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import {url} from './involook'
+import {targetlook} from './involook'
 export default function invotest(){
     console.log(targetcli)
    console.log(targetsen)
    console.log(tarprodcopy)
    console.log(targetinv)
-
+   console.log(targetlook)
+    console.log(url)
    var data = {
     // Customize enables you to provide your own templates
     // Please review the documentation for instructions and examples
@@ -19,7 +22,7 @@ export default function invotest(){
     },
     "images": {
         // The logo on top of your invoice
-        "logo": customlogo,
+        "logo": url,
         // The invoice background
         "background": "https://public.easyinvoice.cloud/img/watermark-draft.jpg"
     },
@@ -62,10 +65,10 @@ export default function invotest(){
         // "margin-right": 25, // Defaults to '25'
         // "margin-left": 25, // Defaults to '25'
         // "margin-bottom": 25, // Defaults to '25'
-        // "format": "A4", // Defaults to A4, options: A3, A4, A5, Legal, Letter, Tabloid
+         "format": targetlook.format, // Defaults to A4, options: A3, A4, A5, Legal, Letter, Tabloid
         // "height": "1000px", // allowed units: mm, cm, in, px
         // "width": "500px", // allowed units: mm, cm, in, px
-        // "orientation": "landscape", // portrait or landscape, defaults to portrait
+         "orientation": targetlook.orientation, // portrait or landscape, defaults to portrait
     },
     // Translate your invoice to your preferred language
     "translate": {
