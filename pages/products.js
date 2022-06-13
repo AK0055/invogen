@@ -81,7 +81,7 @@ export default function Main() {
   return (
     <div class='bg-white dark:bg-gray-800'>
       <Head>
-        <title>Mainpage</title>
+        <title>Invogen</title>
         <meta name="description" content="invogen" />
         <link rel="icon" href="/favicon.ico" />
       </Head>

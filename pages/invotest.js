@@ -5,7 +5,16 @@ import {tarprodcopy} from "./products";
 import {targetinv} from "./invodetails";
 import { useRouter } from 'next/router'
 import { storage } from '../comps/firebaser';
-
+import {
+    
+    getFirestore,
+    query,
+    getDocs,
+    collection,
+    where,
+    addDoc,
+    TimeStamp,doc, setDoc
+  } from "firebase/firestore";
 import Link from 'next/link'
 import {url} from './involook'
 import {targetlook} from './involook'
@@ -17,7 +26,7 @@ import { useEffect,useState } from 'react';
 import styles from '../styles/Home.module.css'
 import { motion } from 'framer-motion';
 import {
-    auth
+    auth,db,
   } from "../comps/firebaser";
   export var pdfurl='';
 
@@ -119,18 +128,43 @@ const runez=()=>{
         console.log('downloading');
         //easyinvoice.download('myInvoice.pdf', result.pdf);
         const file=result.pdf
-        const storageRef = ref(storage, `${usern}/invoice`);
+        var today = new Date();
+        var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date+time;
+        var filename='invo'+dateTime
+        const storageRef = ref(storage, `${usern}/${filename}`);
         var dataurl = 'data:application/pdf;base64,'+file
-        
+        const createdAt = dateTime;
+           console.log('inside adddoc')
+           
+           /* setDoc(doc(db, "cities", "LA"), {
+            name: "Los Angeles",
+            state: "CA",
+            country: "USA"
+          }); */
+          /*  */
+            
         uploadString(storageRef, dataurl, 'data_url').then((snapshot) => {
             console.log('Uploaded a data url');
             getDownloadURL(snapshot.ref).then((downloadURL) => {
                 setImgUrl(downloadURL);pdfurl=downloadURL
                 console.log(pdfurl)
+                try {
+                    const usernow=auth.currentUser.uid
+                    const collectionRef = collection(db, usernow);
+    
+                    addDoc(collectionRef, {
+                    url: pdfurl, 
+                    time: createdAt
+                    });
+                    
+                  } catch (e) {
+                    console.error("Error adding document: ", e);
+                  }
+
           });
-        
-        
-        });
+    });
         
     }
         catch(err) {console.log(err)}

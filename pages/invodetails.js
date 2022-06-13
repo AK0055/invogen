@@ -77,25 +77,25 @@ export default function Main() {
   return (
     <div class='bg-white dark:bg-gray-800'>
       <Head>
-        <title>Mainpage</title>
+        <title>Invogen</title>
         <meta name="description" content="invogen" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Navbar usern={usern}/>
       <div className='text-gray-900 dark:text-gray-300'>
       <motion.div initial="hidden" animate="visible" variants={{
-  hidden: {
-    scale: .8,
-    opacity: 0
-  },
-  visible: {
-    scale: 1,
-    opacity: 1,
-    transition: {
-      delay: .4
-    }
-  },
-}}>
+          hidden: {
+            scale: .8,
+            opacity: 0
+          },
+          visible: {
+            scale: 1,
+            opacity: 1,
+            transition: {
+              delay: .4
+            }
+          },
+        }}>
   <h5 className={styles.title}>
           Hi, <a>{usern}</a> 👋
         </h5>
