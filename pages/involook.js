@@ -24,6 +24,7 @@ export default function Main() {
     const router= useRouter()
     const [format,setformat]= useState('')
     const [ori, setori] = useState('');
+    const [note, setnote] = useState('');
     const [imgUrl, setImgUrl] = useState(null);
     const [progresspercent, setProgresspercent] = useState(0);
     const [usern,setUsern]=useState('User')
@@ -44,10 +45,7 @@ export default function Main() {
     catch (TypeError) {
       const user =  auth.currentUser;
       console.log(user)
-      /* const emailarr = user.email.split("@");
-        var curruser= emailarr[0];
-        setUsern(curruser)
-        console.log(usern) */
+     
     }
   }
  
@@ -56,20 +54,20 @@ export default function Main() {
     e.preventDefault()
     const file = e.target.files[0]
     if (!file) return;
-    const storageRef = ref(storage, `files/${file.name}`);
+    const storageRef = ref(storage, `${usern}/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on("state_changed",
       (snapshot) => {
         const progress =
           Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-        setProgresspercent(progress);
+          setProgresspercent(progress);
       },
       (error) => {
         alert(error);
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImgUrl(downloadURL);url=downloadURL
           
         });
@@ -79,7 +77,7 @@ export default function Main() {
   const addlook=()=> {
     lookobj.format=format
     lookobj.orientation=ori
-    
+    lookobj.notice=note
     console.log(lookobj)
     const returnedlook = Object.assign(targetlook, lookobj);
 
@@ -88,6 +86,10 @@ export default function Main() {
   const finalpager=()=> {
     addlook();
     router.push('/invotest')
+  }
+  const previouspager=()=> {
+    //addlook();
+    router.push('/invodetails')
   }
   useEffect(() => {
     const user =  auth.currentUser;
@@ -146,13 +148,17 @@ export default function Main() {
             </select>
         </div>
         <div>
+            <label for="note" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Bottom notice</label>
+            <input onChange={(e) => setnote(e.target.value)} type="text" id="note" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Kindly pay before due date" required/>
+        </div>  
+        <div>
         <label for="img" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Company logo</label>
 
         <input class="block w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" onChange={handleSubmit} type='file' />
       {
         !imgUrl &&
           <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
-    <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${progresspercent}%` }}> {progresspercent}%</div>
+    <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" style={{ width: `${progresspercent}%` }}></div>
   </div>
       }
       <div class='p-5'>
@@ -168,7 +174,7 @@ export default function Main() {
       </div>
       </form>
       <div class="px-5">
-      <button onClick={invotest} type="button" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>
+      <button onClick={previouspager} type="button" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg></button>
       <button onClick={finalpager} type="button" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg></button>
 
       </div>
