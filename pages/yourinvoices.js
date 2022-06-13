@@ -41,7 +41,7 @@ export default function Main() {
     const [progresspercent, setProgresspercent] = useState(0);
     const [usern,setUsern]=useState('User')
     const [tap,settap]=useState(false);
- 
+    const [localarr,setarr]=useState([])
   const getemail=(user)=>{
     try{
       console.log(user)
@@ -111,10 +111,11 @@ export default function Main() {
           // doc.data() is never undefined for query doc snapshots
           console.log(doc.id, " => ", doc.data().url);
           var temp={invname:'invo_'+doc.data().time, invurl: doc.data().url}
-          urlarr.push(temp)
+          urlarr.push(temp.invurl)
           //console.log(urlarr)
         });
         count++;
+        setarr(urlarr)
       }
       
   }
@@ -151,14 +152,14 @@ export default function Main() {
         <p className='p-5 text-slate-900 dark:text-white	decoration-8	font-bold'> All your created invoices!</p>
       </div>
       <button onClick={fireread} type="button" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Get docs</button>
-      <button onClick={(e) => settap(true)} type="button" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Get docs</button>
+      <button onClick={()=>{settap(true)}} type="button" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Get docs</button>
 
       <ul>
-  {tap && urlarr.map(item =>
+  {localarr && localarr.map(item =>
   <li key="{item}">{item}</li>
   )}
 </ul>
-    {urlarr && console.log(urlarr)}
+    {localarr && console.log(localarr)}
 
 
 
