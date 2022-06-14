@@ -20,11 +20,13 @@ import {
   auth,
   db
 } from "../comps/firebaser";
+import { motion } from 'framer-motion';
 
 export default function Home() {
   {var [autho,setAutho]=useState('logged out');     var [email,setEmail]=useState('');  var [pwd,setPwd]=useState('');  
   
   const router = useRouter();
+  var [strong,setstrong]=useState(true);
   const [user, loading, error] = useAuthState(auth);
 
   useEffect(() => {
@@ -56,7 +58,8 @@ export default function Home() {
   
  const register = async () => {
   try {
-    const res = await createUserWithEmailAndPassword(auth, email, pwd);
+    if(pwd && pwd.length>=6){
+      const res = await createUserWithEmailAndPassword(auth, email, pwd);
     const user = res.user;
     
 
@@ -66,6 +69,12 @@ export default function Home() {
       email,
     });
     router.push('/mainpage');
+    setstrong(true)
+    }
+    else{
+      setstrong(false)
+    }
+    
   } catch (err) {
     console.error(err);
     alert(err.message);
@@ -112,9 +121,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a>Invogen</a>
-        </h1>
+      <motion.h1 className={styles.title} 
+                whileTap={{
+                  scale: 0.9,
+                  borderRadius: "100%"
+
+              }}>Welcome to <a>Invogen</a></motion.h1>
+        
 
         <p className={styles.description}>
           Get started by Signing up!
@@ -129,18 +142,29 @@ export default function Home() {
             <input type="email"   onChange={(e) => setEmail(e.target.value)} name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="name@company.com"/>
         </div>
         <div>
-            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Your password</label>
-            <input type="password" onChange={(e) => setPwd(e.target.value)} name="password" id="password" placeholder="••••••••" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
+            <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">{!strong ? 'Weak password' : 'Your password'}</label>
+            <input type="password" onChange={(e) => {setPwd(e.target.value); if(e.target.value.length<6 && e.target.value.length>0) setstrong(false); else if(e.target.value.length>=6 || e.target.value.length==0) setstrong(true);}} name="password" id="password" placeholder={!strong ? 'Min. 6 length needed' : '••••••••'} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"/>
         </div><br/>
 
         <div class="flex items-start">
             <div class="flex items-start">
                 <div class="flex items-center h-5">
                   <button className="login-provider-button 	translate-x-5	" onClick={signInWithGoogle}>
-                    <img src="https://img.icons8.com/ios-filled/50/000000/google-logo.png" alt="google icon"/>
+                  <motion.img src="https://img.icons8.com/ios-filled/50/000000/google-logo.png" alt="google icon"
+                whileTap={{
+                  scale: 0.7,
+                  borderRadius: "100%"
+
+              }}/>
+                  
                   </button>
                   <button className="login-provider-button 	translate-x-10	" onClick={anonysignhandler}>
-                    <img className="" src="https://img.icons8.com/material-outlined/48/undefined/user--v1.png" alt="user icon"/>
+                  <motion.img src="https://img.icons8.com/material-outlined/48/undefined/user--v1.png" alt="user icon"
+                whileTap={{
+                  scale: 0.7,
+                  borderRadius: "100%"
+
+              }}/>
                   </button>
                 </div>
             </div>
