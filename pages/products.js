@@ -32,6 +32,7 @@ export default function Main() {
   const [ptax,setptax]=useState(0)
   const [pprice,setprice]=useState(0)
   const [usern,setUsern]=useState('User')
+  const [added,setadded]=useState(false)
   const getemail=(user)=>{
     try{
       if(user.email!=null){
@@ -64,6 +65,7 @@ export default function Main() {
     tarprodarr.push(targetprod)
     console.log(tarprodarr)
     tarprodcopy=tarprodarr
+    setadded(true)
   }
   const prodpager=()=> {
     router.push('/invodetails')
@@ -111,27 +113,27 @@ export default function Main() {
         
         <div>
             <label for="product" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Product</label>
-            <input onChange={(e) => setProdn(e.target.value)} type="text" id="product" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="RTX 3060" required/>
+            <input onChange={(e) => {setProdn(e.target.value);setadded(false)}} type="text" id="product" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="RTX 3060" required/>
             
         </div>  
         <div>
             <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Quantity</label>
-            <input type="number" onChange={(e) => setpqtyn(e.target.value)} id="quantity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="100"  required/>
+            <input type="number" onChange={(e) => {setpqtyn(e.target.value);setadded(false)}} id="quantity" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="100"  required/>
             
         </div>
         <div>
             <label for="taxrate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Tax Rate</label>
-            <input type="number" onChange={(e) => setptax(e.target.value)} id="taxrate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="8"  required/>
+            <input type="number" onChange={(e) => {setptax(e.target.value);setadded(false)}} id="taxrate" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="8"  required/>
             
         </div>
         <div>
             <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Price</label>
-            <input type="number" onChange={(e) => setprice(e.target.value)} id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="12999"  required/>
+            <input type="number" onChange={(e) => {setprice(e.target.value);setadded(false)}} id="price" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="12999"  required/>
             
         </div>
     </div>
         <div class="p-5">
-            <button onClick={addprod} type="button" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg></button>
+            <button onClick={addprod} type="button" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">{!added && <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>}{added && `Added`}</button>
 
         </div>
     </form>
