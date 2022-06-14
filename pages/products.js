@@ -21,7 +21,7 @@ import {
   auth,
   db
 } from "../comps/firebaser";
-import {tarprodarr} from './prodarr'
+import {tarprodarr} from '../comps/prodarr'
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, signOut, signInWithPopup, GoogleAuthProvider,createUserWithEmailAndPassword,onAuthStateChanged } from "firebase/auth";
 export var tarprodcopy = []

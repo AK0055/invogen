@@ -6,7 +6,7 @@ import { useEffect,useState } from 'react';
 import styles from '../styles/Home.module.css'
 import {invotest} from './invotest'
 import { useRouter } from 'next/router'
-import clientobj from "./clients";
+import clientobj from "../comps/clients";
 import { motion } from 'framer-motion';
 
 import {

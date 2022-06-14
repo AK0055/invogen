@@ -9,9 +9,9 @@ import { motion } from 'framer-motion';
 import { storage } from '../comps/firebaser';
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { useRouter } from 'next/router'
-import lookobj from "./looks";
-import {urlarr} from './urls.js'
-import {namearr} from './names.js'
+import lookobj from "../comps/looks";
+import {urlarr} from '../comps/urls.js'
+import {namearr} from '../comps/names.js'
 import {
     
     getFirestore,

@@ -8,7 +8,7 @@ import {invotest} from './invotest'
 import { motion } from 'framer-motion';
 
 import { useRouter } from 'next/router'
-import invobj from "./invos";
+import invobj from "../comps/invos";
 import {
   auth
 } from "../comps/firebaser";
