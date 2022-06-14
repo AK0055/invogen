@@ -11,6 +11,7 @@ import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { useRouter } from 'next/router'
 import lookobj from "./looks";
 import {urlarr} from './urls.js'
+import {namearr} from './names.js'
 import {
     
     getFirestore,
@@ -42,6 +43,7 @@ export default function Main() {
     const [usern,setUsern]=useState('User')
     const [tap,settap]=useState(false);
     const [localarr,setarr]=useState([])
+    const [narr,setnarr]=useState([])
   const getemail=(user)=>{
     try{
       console.log(user)
@@ -110,18 +112,21 @@ export default function Main() {
         querySnapshot.forEach((doc) => {
           // doc.data() is never undefined for query doc snapshots
           console.log(doc.id, " => ", doc.data().url);
-          var temp={invname:'invo_'+doc.data().time, invurl: doc.data().url}
+          var temp={invname:doc.data().time, invurl: doc.data().url}
           urlarr.push(temp.invurl)
+          namearr.push(temp.invname)
           //console.log(urlarr)
         });
         count++;
         setarr(urlarr)
+        setnarr(namearr)
       }
       
   }
   useEffect(() => {
     const user =  auth.currentUser;
     getemail(user);
+    
   }, []);
   return (
     <div class='bg-white dark:bg-gray-800'>
@@ -151,15 +156,16 @@ export default function Main() {
 </motion.div>
         <p className='p-5 text-slate-900 dark:text-white	decoration-8	font-bold'> All your created invoices!</p>
       </div>
-      <button onClick={fireread} type="button" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Get docs</button>
-      <button onClick={()=>{settap(true)}} type="button" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Get docs</button>
+      <div className='p-5'>
+       <button onClick={fireread} type="button" class=" text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Get Invoices</button>
 
-      <ul>
-  {localarr && localarr.map(item =>
-  <li key="{item}">{item}</li>
-  )}
-</ul>
-    {localarr && console.log(localarr)}
+      <div class="w-72 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        {localarr && localarr.map((item,index) =>
+        <a target="_blank" href={item}class="block w-full px-4 py-2 text-black dark:text-white bg-white border-b border-gray-200 rounded-t-lg cursor-pointer dark:bg-gray-800 dark:border-gray-600"><h3>Invoice-{narr[index]}</h3></a>
+        )}
+        </div>
+        </div>
+   
 
 
 
