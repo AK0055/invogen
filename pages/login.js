@@ -136,14 +136,14 @@ export default function Home() {
             <div class="flex items-start">
                 <div class="flex items-center h-5">
                   <button className="login-provider-button 	translate-x-5	" onClick={signInWithGoogle}>
-                  <motion.img src="https://img.icons8.com/ios-filled/50/000000/google-logo.png" alt="google icon"
+                  <motion.img src="https://img.icons8.com/plasticine/60/undefined/google-logo.png" alt="google icon"
                 whileTap={{
                   scale: 0.7,
                   borderRadius: "100%"
 
               }}/>                  </button>
                   <button className="login-provider-button 	translate-x-10	" onClick={anonysignhandler}>
-                  <motion.img src="https://img.icons8.com/material-outlined/48/undefined/user--v1.png" alt="user icon"
+                  <motion.img src="https://img.icons8.com/external-flaticons-lineal-color-flat-icons/48/undefined/external-person-100-most-used-icons-flaticons-lineal-color-flat-icons.png" alt="user icon"
                 whileTap={{
                   scale: 0.7,
                   borderRadius: "100%"
@@ -166,11 +166,11 @@ export default function Home() {
 
       <footer className={styles.footer}>
         <a
-          href=""
+          href="https://github.com/AK0055"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by AKOOS 
+          Powered by AK0055 
           
         </a>
       </footer>
